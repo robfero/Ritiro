@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ritiro · Pacco Petra</title>
+<meta name="description" content="Prenota il ritiro di Pacco Petra: dove passare a prenderla e a che ora.">
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --surface: #ffffff;
+    --surface-2: #f0f2f5;
+    --border: #d9dde3;
+    --text: #1b2028;
+    --muted: #5c6673;
+    --accent: #1f6feb;
+    --accent-text: #ffffff;
+    --accent-soft: #e7f0ff;
+    --danger: #c0392b;
+    --danger-soft: #fdecea;
+    --ok: #1e7a45;
+    --ok-soft: #e6f5ec;
+    --wa: #128c7e;
+    --wa-text: #ffffff;
+    --radius: 12px;
+    --shadow: 0 1px 2px rgba(16,24,40,.06), 0 8px 24px rgba(16,24,40,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12151a;
+      --surface: #1a1f27;
+      --surface-2: #222834;
+      --border: #333c4a;
+      --text: #e8ecf1;
+      --muted: #9aa5b4;
+      --accent: #4c8dff;
+      --accent-text: #0d1117;
+      --accent-soft: #1d2b44;
+      --danger: #ff7b6b;
+      --danger-soft: #3a1f1c;
+      --ok: #6fd39a;
+      --ok-soft: #16301f;
+      --wa: #25d366;
+      --wa-text: #06281c;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12151a;
+    --surface: #1a1f27;
+    --surface-2: #222834;
+    --border: #333c4a;
+    --text: #e8ecf1;
+    --muted: #9aa5b4;
+    --accent: #4c8dff;
+    --accent-text: #0d1117;
+    --accent-soft: #1d2b44;
+    --danger: #ff7b6b;
+    --danger-soft: #3a1f1c;
+    --ok: #6fd39a;
+    --ok-soft: #16301f;
+    --wa: #25d366;
+    --wa-text: #06281c;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 620px; margin: 0 auto; padding: 24px 16px 64px; }
+
+  header.top { display: flex; align-items: center; padding: 8px 0 20px; }
+  .logo {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-weight: 700; font-size: 20px; letter-spacing: -.01em;
+  }
+  .logo .mark {
+    width: 34px; height: 34px; border-radius: 10px;
+    background: var(--accent); color: var(--accent-text);
+    display: grid; place-items: center; font-size: 18px;
+  }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px;
+  }
+  h1 { font-size: 26px; margin: 0 0 6px; letter-spacing: -.02em; }
+  .lead { color: var(--muted); margin: 0 0 22px; }
+
+  .parcel {
+    display: flex; align-items: center; gap: 14px;
+    border: 1px solid var(--border); border-radius: 10px;
+    background: var(--surface-2); padding: 14px 16px; margin-bottom: 22px;
+  }
+  .parcel .icon {
+    width: 44px; height: 44px; border-radius: 10px; flex: 0 0 44px;
+    background: var(--accent-soft); color: var(--accent);
+    display: grid; place-items: center; font-size: 22px;
+  }
+  .parcel .name { font-weight: 700; font-size: 17px; display: block; }
+  .parcel .desc { color: var(--muted); font-size: 14px; display: block; }
+
+  .grid { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
+  .field { display: flex; flex-direction: column; gap: 6px; grid-column: span 2; }
+  .half { grid-column: span 1; }
+  @media (max-width: 560px) {
+    .half { grid-column: span 2; }
+    .card { padding: 18px; }
+  }
+  label { font-size: 14px; font-weight: 600; }
+  label .opt { font-weight: 400; color: var(--muted); }
+  input[type="text"], input[type="tel"], input[type="date"], input[type="time"], textarea {
+    font: inherit; color: var(--text); background: var(--surface);
+    border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; width: 100%;
+  }
+  textarea { resize: vertical; min-height: 72px; }
+  input:focus-visible, textarea:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+  input[aria-invalid="true"], textarea[aria-invalid="true"] {
+    border-color: var(--danger); background: var(--danger-soft);
+  }
+  .hint { font-size: 13px; color: var(--muted); }
+  .error { font-size: 13px; color: var(--danger); }
+  .error:empty { display: none; }
+
+  .actions { display: flex; gap: 10px; margin-top: 26px; flex-wrap: wrap; align-items: center; }
+  .actions .spacer { flex: 1; }
+  .btn {
+    font: inherit; font-weight: 600; cursor: pointer; border-radius: 10px; text-decoration: none;
+    padding: 11px 20px; border: 1px solid var(--border); background: var(--surface); color: var(--text);
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn:hover { background: var(--surface-2); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+  .btn.primary:hover { filter: brightness(1.06); background: var(--accent); }
+  .btn.wa { background: var(--wa); border-color: var(--wa); color: var(--wa-text); }
+  .btn.wa:hover { filter: brightness(1.06); background: var(--wa); }
+  .btn.wide { width: 100%; }
+  .link {
+    background: none; border: none; color: var(--danger); cursor: pointer;
+    font: inherit; padding: 6px; text-decoration: underline;
+  }
+  button.subtle {
+    background: none; border: none; color: var(--accent); cursor: pointer;
+    font: inherit; font-size: 13px; padding: 2px 4px; text-decoration: underline;
+  }
+
+  .send { margin-top: 22px; display: flex; flex-direction: column; gap: 10px; }
+  .preview {
+    margin: 0; white-space: pre-wrap; word-break: break-word;
+    font: 14px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 14px; color: var(--text);
+  }
+  .send .to { font-size: 13px; color: var(--muted); line-height: 1.7; margin: 0; }
+  .inline-row { display: flex; gap: 8px; align-items: center; }
+  .inline-row input { flex: 1; }
+  code.share {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px; background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 2px 6px; word-break: break-all; color: var(--text);
+  }
+
+  .banner { border-radius: 10px; padding: 12px 14px; font-size: 15px; margin-bottom: 18px; }
+  .banner.err { background: var(--danger-soft); color: var(--danger); border: 1px solid currentColor; }
+
+  .done-mark {
+    width: 56px; height: 56px; border-radius: 50%; background: var(--ok-soft); color: var(--ok);
+    display: grid; place-items: center; font-size: 28px; margin-bottom: 14px;
+  }
+  .when {
+    margin-top: 18px; padding: 16px; border-radius: 10px;
+    background: var(--accent-soft); color: var(--accent);
+  }
+  .when .big { font-size: 22px; font-weight: 700; display: block; letter-spacing: -.01em; }
+  .when .sub { font-size: 14px; }
+  .code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 20px; font-weight: 700; letter-spacing: .06em;
+  }
+  footer.foot { text-align: center; color: var(--muted); font-size: 13px; margin-top: 24px; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="logo"><span class="mark" aria-hidden="true">↥</span> Ritiro</span>
+  </header>
+
+  <!-- ============ VISTA: MODULO ============ -->
+  <main id="view-form">
+    <div class="card">
+      <h1 id="form-title">Prenota il ritiro</h1>
+      <p class="lead" id="form-lead">Dimmi dove e quando devo passare a prendere Petra.</p>
+
+      <div class="parcel">
+        <span class="icon" aria-hidden="true">🎒</span>
+        <span>
+          <span class="name">Pacco Petra</span>
+          <span class="desc">1 collo · fragile · maneggiare con cura</span>
+        </span>
+      </div>
+
+      <div class="banner err" id="form-banner" role="alert" hidden></div>
+
+      <form id="booking-form" novalidate>
+        <div class="grid">
+          <div class="field">
+            <label for="place">Dove la prendo</label>
+            <input type="text" id="place" placeholder="es. Scuola, Via Verdi 8" autocomplete="off">
+            <p class="error" id="err-place" role="alert"></p>
+          </div>
+          <div class="field half">
+            <label for="date">Giorno</label>
+            <input type="date" id="date">
+            <p class="error" id="err-date" role="alert"></p>
+          </div>
+          <div class="field half">
+            <label for="time">Ora</label>
+            <input type="time" id="time">
+            <p class="error" id="err-time" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="notes">Note <span class="opt">(facoltativo)</span></label>
+            <textarea id="notes" maxlength="300" placeholder="Con chi è, cosa deve portare, dove aspetta…"></textarea>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn" id="btn-cancel-edit" hidden>Annulla modifica</button>
+          <span class="spacer"></span>
+          <button type="submit" class="btn primary" id="btn-submit">Conferma il ritiro</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <!-- ============ VISTA: PRENOTAZIONE CONFERMATA ============ -->
+  <main id="view-done" hidden>
+    <div class="card">
+      <div class="done-mark" aria-hidden="true">✓</div>
+      <h1>Ritiro prenotato</h1>
+      <p class="lead">Pacco Petra ti aspetta. Non fare tardi.</p>
+
+      <div class="when">
+        <span class="big" id="done-when"></span>
+        <span class="sub" id="done-place"></span>
+      </div>
+
+      <div class="send">
+        <p class="hint" id="msg-label">Messaggio pronto da mandare:</p>
+        <p class="preview" id="msg-preview"></p>
+        <a class="btn wa wide" id="wa-link" target="_blank" rel="noopener">Mandalo su WhatsApp</a>
+        <p class="to" id="wa-to"></p>
+
+        <div class="number-setup field" id="number-setup" hidden>
+          <label for="wa-number">Numero WhatsApp di papà</label>
+          <div class="inline-row">
+            <input type="tel" id="wa-number" placeholder="+39 333 1234567" autocomplete="tel">
+            <button type="button" class="btn" id="btn-save-number">Salva</button>
+          </div>
+          <p class="hint">Con il numero salvato, WhatsApp si apre già sulla chat giusta.</p>
+          <p class="error" id="err-wa-number" role="alert"></p>
+        </div>
+
+        <p class="to" id="share-row" hidden>
+          Link con il numero già dentro, da mandare a Petra:
+          <code class="share" id="share-link"></code>
+          <button type="button" class="subtle" id="btn-copy-link">copia il link</button>
+          <span class="hint" id="copy-link-done" hidden>Copiato ✓</span>
+        </p>
+
+        <div>
+          <button type="button" class="subtle" id="btn-copy">Copia il messaggio</button>
+          <span class="hint" id="copy-done" hidden>Copiato ✓</span>
+        </div>
+      </div>
+
+      <p class="hint" style="margin-top:16px;">Codice ritiro: <span class="code" id="done-code"></span></p>
+
+      <div class="actions">
+        <button type="button" class="btn" id="btn-edit">Modifica</button>
+        <span class="spacer"></span>
+        <button type="button" class="link" id="btn-delete">Annulla il ritiro</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="foot">Ritiro · la prenotazione resta nel tuo browser, nessun invio a server.</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------------------------------------------------------------- Config */
+  var STORAGE_KEY = "ritiro.petra.v1";
+  var NUMBER_KEY = "ritiro.petra.papa.v1";
+  var MAX_DAYS_AHEAD = 30;
+
+  /* ------------------------------------------------------------- Utilities */
+  var $ = function (sel) { return document.querySelector(sel); };
+
+  function esc(value) {
+    return String(value == null ? "" : value)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+  function pad(n) { return n < 10 ? "0" + n : String(n); }
+  function toISO(date) { return date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate()); }
+  function addDays(date, days) {
+    var d = new Date(date.getTime());
+    d.setDate(d.getDate() + days);
+    return d;
+  }
+  function parseISO(iso) {
+    var p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || "");
+    if (!p) { return null; }
+    var d = new Date(Number(p[1]), Number(p[2]) - 1, Number(p[3]));
+    return isNaN(d.getTime()) ? null : d;
+  }
+  function today() {
+    var d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
+  function dayLabel(iso) {
+    var d = parseISO(iso);
+    if (!d) { return "—"; }
+    var diff = Math.round((d.getTime() - today().getTime()) / 86400000);
+    if (diff === 0) { return "oggi"; }
+    if (diff === 1) { return "domani"; }
+    if (diff === 2) { return "dopodomani"; }
+    return d.toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" });
+  }
+  function newCode() {
+    var alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    var bytes = new Uint8Array(4);
+    if (window.crypto && window.crypto.getRandomValues) {
+      window.crypto.getRandomValues(bytes);
+    } else {
+      for (var k = 0; k < 4; k++) { bytes[k] = Math.floor(Math.random() * 256); }
+    }
+    var out = "";
+    for (var i = 0; i < 4; i++) { out += alphabet.charAt(bytes[i] % alphabet.length); }
+    return "PETRA-" + out;
+  }
+
+  /* ------------------------------------------------------- Messaggio WhatsApp */
+  function whenSentence(b) {
+    var day = parseISO(b.date);
+    if (!day) { return "—"; }
+    var full = day.toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" });
+    var label = dayLabel(b.date);
+    var when = label === full ? full : label + " (" + full + ")";
+    return when + " alle " + b.time;
+  }
+
+  function messageFor(b) {
+    var lines = [
+      "Ciao papà! Puoi venire a prendermi?",
+      "",
+      "🎒 Pacco Petra",
+      "📍 " + b.place,
+      "🕓 " + whenSentence(b)
+    ];
+    if (b.notes) { lines.push("📝 " + b.notes); }
+    return lines.join("\n");
+  }
+
+  /* Numero in formato wa.me: solo cifre, prefisso internazionale incluso. */
+  function normalizeNumber(input) {
+    var raw = String(input || "").trim();
+    var digits = raw.replace(/\D/g, "");
+    if (!digits) { return ""; }
+    if (raw.charAt(0) !== "+") {
+      if (digits.indexOf("00") === 0) { digits = digits.slice(2); }
+      else if (digits.length === 10 && digits.charAt(0) === "3") { digits = "39" + digits; }
+    }
+    return digits.length >= 8 && digits.length <= 15 ? digits : "";
+  }
+  function prettyNumber(digits) {
+    if (!digits) { return ""; }
+    if (digits.indexOf("39") === 0 && digits.length >= 11) {
+      var rest = digits.slice(2);
+      return "+39 " + rest.slice(0, 3) + " " + rest.slice(3);
+    }
+    return "+" + digits;
+  }
+
+  /* Numero passato nella URL: ?tel=+39333... (accetta anche papa= e numero=).
+     Dentro un iframe la query sta sulla pagina che ci ospita: la si legge dal
+     referrer, che è l'unica parte della URL genitore visibile da qui. */
+  function numberFromUrl() {
+    var keys = ["tel", "papa", "numero"];
+    var sources = [window.location.search, window.location.hash.replace(/^#/, "?")];
+    try {
+      if (window.top !== window.self && document.referrer) {
+        sources.push(new URL(document.referrer).search);
+      }
+    } catch (e) { /* referrer non leggibile: pazienza */ }
+
+    for (var i = 0; i < sources.length; i++) {
+      if (!sources[i]) { continue; }
+      var params;
+      try { params = new URLSearchParams(sources[i]); } catch (e) { continue; }
+      for (var k = 0; k < keys.length; k++) {
+        var digits = normalizeNumber(params.get(keys[k]) || "");
+        if (digits) { return digits; }
+      }
+    }
+    return "";
+  }
+
+  /* URL di questa pagina con il numero già impostato, da mandare a Petra. */
+  function shareLink(digits) {
+    var base = window.location.href;
+    try {
+      if (window.top !== window.self && document.referrer) { base = document.referrer; }
+    } catch (e) { /* si resta sulla URL locale */ }
+    return base.split("?")[0].split("#")[0] + "?tel=" + encodeURIComponent("+" + digits);
+  }
+
+  function loadNumber() {
+    try { return normalizeNumber(window.localStorage.getItem(NUMBER_KEY) || ""); }
+    catch (e) { return ""; }
+  }
+  function storeNumber(digits) {
+    try { window.localStorage.setItem(NUMBER_KEY, digits); } catch (e) {}
+  }
+
+  /* ---------------------------------------------------------------- Storage */
+  function loadBooking() {
+    try {
+      var raw = window.localStorage.getItem(STORAGE_KEY);
+      if (!raw) { return null; }
+      var b = JSON.parse(raw);
+      return b && typeof b.place === "string" && typeof b.date === "string" ? b : null;
+    } catch (e) { return null; }
+  }
+  function saveBooking(booking) {
+    try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(booking)); } catch (e) {}
+  }
+  function removeBooking() {
+    try { window.localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  }
+
+  /* ----------------------------------------------------------------- Stato */
+  var booking = null;
+
+  function collect() {
+    return {
+      place: $("#place").value.trim(),
+      date: $("#date").value,
+      time: $("#time").value,
+      notes: $("#notes").value.trim()
+    };
+  }
+
+  /* ------------------------------------------------------------ Validazione */
+  function setError(key, message) {
+    var box = $("#err-" + key);
+    if (box) { box.textContent = message || ""; }
+    var input = $("#" + key);
+    if (input) {
+      if (message) { input.setAttribute("aria-invalid", "true"); }
+      else { input.removeAttribute("aria-invalid"); }
+    }
+  }
+  function banner(message) {
+    var el = $("#form-banner");
+    el.textContent = message || "";
+    el.hidden = !message;
+  }
+  function clearErrors() {
+    ["place", "date", "time"].forEach(function (key) { setError(key, ""); });
+    banner("");
+  }
+
+  function validate(d) {
+    var errors = [];
+    if (d.place.length < 3) { errors.push({ key: "place", message: "Scrivi dove devo passare a prenderla." }); }
+
+    var day = parseISO(d.date);
+    if (!day) {
+      errors.push({ key: "date", message: "Scegli il giorno." });
+    } else if (day.getTime() < today().getTime()) {
+      errors.push({ key: "date", message: "Il giorno è già passato." });
+    } else if (day.getTime() > addDays(today(), MAX_DAYS_AHEAD).getTime()) {
+      errors.push({ key: "date", message: "Puoi prenotare al massimo tra " + MAX_DAYS_AHEAD + " giorni." });
+    }
+
+    if (!/^\d{2}:\d{2}$/.test(d.time)) { errors.push({ key: "time", message: "Scegli l'ora." }); }
+
+    clearErrors();
+    errors.forEach(function (e) { setError(e.key, e.message); });
+    if (errors.length) {
+      banner(errors.length === 1 ? "C'è un campo da correggere." : "Ci sono " + errors.length + " campi da correggere.");
+      var first = $("#" + errors[0].key);
+      if (first) { first.focus(); }
+    }
+    return errors.length === 0;
+  }
+
+  /* --------------------------------------------------------------- Render */
+  function showView(name) {
+    $("#view-form").hidden = name !== "form";
+    $("#view-done").hidden = name !== "done";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function renderDone(b) {
+    $("#done-when").textContent = dayLabel(b.date) + " alle " + b.time;
+    $("#done-place").textContent = b.place;
+    $("#done-code").textContent = b.code;
+    renderSend(b);
+    showView("done");
+  }
+
+  function renderSend(b) {
+    var message = messageFor(b);
+    var number = loadNumber();
+    var link = $("#wa-link");
+
+    $("#msg-preview").textContent = message;
+    link.href = "https://wa.me/" + number + "?text=" + encodeURIComponent(message);
+    link.textContent = number ? "Mandalo a papà su WhatsApp" : "Mandalo su WhatsApp";
+    $("#wa-to").innerHTML = number
+      ? "Si apre la chat con <strong>" + esc(prettyNumber(number)) +
+        '</strong> · <button type="button" class="subtle" data-change>cambia numero</button>'
+      : 'WhatsApp ti chiede a chi mandarlo — <button type="button" class="subtle" data-change>salva il numero di papà</button> per aprire subito la sua chat.';
+    $("#number-setup").hidden = true;
+    $("#copy-done").hidden = true;
+    renderShareLink(number);
+  }
+
+  function renderShareLink(number) {
+    var row = $("#share-row");
+    row.hidden = !number;
+    $("#copy-link-done").hidden = true;
+    if (number) { $("#share-link").textContent = shareLink(number); }
+  }
+
+  function openNumberSetup() {
+    var box = $("#number-setup");
+    box.hidden = false;
+    $("#err-wa-number").textContent = "";
+    $("#wa-number").value = prettyNumber(loadNumber());
+    $("#wa-number").focus();
+  }
+
+  function saveNumber() {
+    var digits = normalizeNumber($("#wa-number").value);
+    if (!digits) {
+      $("#err-wa-number").textContent = "Numero non valido. Scrivilo con il prefisso, es. +39 333 1234567.";
+      $("#wa-number").setAttribute("aria-invalid", "true");
+      return;
+    }
+    $("#wa-number").removeAttribute("aria-invalid");
+    storeNumber(digits);
+    if (booking) { renderSend(booking); }
+  }
+
+  function copyMessage() {
+    var text = $("#msg-preview").textContent;
+    var shown = function () {
+      $("#copy-done").hidden = false;
+      window.setTimeout(function () { $("#copy-done").hidden = true; }, 2500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(shown, selectMessage);
+    } else {
+      selectMessage();
+    }
+  }
+
+  function copyShareLink() {
+    var text = $("#share-link").textContent;
+    var shown = function () {
+      $("#copy-link-done").hidden = false;
+      window.setTimeout(function () { $("#copy-link-done").hidden = true; }, 2500);
+    };
+    var fallback = function () { selectNode($("#share-link")); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(shown, fallback);
+    } else {
+      fallback();
+    }
+  }
+
+  function selectMessage() { selectNode($("#msg-preview")); }
+
+  function selectNode(el) {
+    var range = document.createRange();
+    range.selectNodeContents(el);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  function openForm(existing) {
+    $("#form-title").textContent = existing ? "Modifica il ritiro" : "Prenota il ritiro";
+    $("#form-lead").textContent = existing
+      ? "Cambia dove o quando devo passare a prendere Petra."
+      : "Dimmi dove e quando devo passare a prendere Petra.";
+    $("#btn-submit").textContent = existing ? "Salva le modifiche" : "Conferma il ritiro";
+    $("#btn-cancel-edit").hidden = !existing;
+
+    $("#place").value = existing ? existing.place : "";
+    $("#date").value = existing ? existing.date : "";
+    $("#time").value = existing ? existing.time : "";
+    $("#notes").value = existing && existing.notes ? existing.notes : "";
+
+    clearErrors();
+    showView("form");
+    $("#place").focus({ preventScroll: true });
+  }
+
+  /* ------------------------------------------------------------------ Init */
+  function initDateBounds() {
+    var input = $("#date");
+    input.min = toISO(today());
+    input.max = toISO(addDays(today(), MAX_DAYS_AHEAD));
+  }
+
+  function bind() {
+    $("#booking-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      var d = collect();
+      if (!validate(d)) { return; }
+      booking = {
+        place: d.place, date: d.date, time: d.time, notes: d.notes,
+        code: booking && booking.code ? booking.code : newCode()
+      };
+      saveBooking(booking);
+      renderDone(booking);
+    });
+
+    $("#booking-form").addEventListener("input", function (event) {
+      if (event.target.id) { setError(event.target.id, ""); }
+      banner("");
+    });
+
+    $("#btn-cancel-edit").addEventListener("click", function () {
+      if (booking) { renderDone(booking); }
+    });
+
+    $("#wa-to").addEventListener("click", function (event) {
+      if (event.target.hasAttribute("data-change")) { openNumberSetup(); }
+    });
+    $("#btn-save-number").addEventListener("click", saveNumber);
+    $("#wa-number").addEventListener("keydown", function (event) {
+      if (event.key === "Enter") { event.preventDefault(); saveNumber(); }
+    });
+    $("#wa-number").addEventListener("input", function () {
+      $("#err-wa-number").textContent = "";
+      $("#wa-number").removeAttribute("aria-invalid");
+    });
+    $("#btn-copy").addEventListener("click", copyMessage);
+    $("#btn-copy-link").addEventListener("click", copyShareLink);
+
+    $("#btn-edit").addEventListener("click", function () { openForm(booking); });
+
+    $("#btn-delete").addEventListener("click", function () {
+      if (!window.confirm("Vuoi annullare il ritiro di Pacco Petra?")) { return; }
+      removeBooking();
+      booking = null;
+      openForm(null);
+    });
+  }
+
+  initDateBounds();
+  bind();
+  var urlNumber = numberFromUrl();
+  if (urlNumber) { storeNumber(urlNumber); }
+  booking = loadBooking();
+  if (booking) { renderDone(booking); } else { openForm(null); }
+})();
+</script>
+</body>
+</html>
