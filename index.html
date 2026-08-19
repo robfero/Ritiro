@@ -157,8 +157,13 @@
     padding: 12px 14px; color: var(--text);
   }
   .send .to { font-size: 13px; color: var(--muted); line-height: 1.7; margin: 0; }
-  .number-setup { display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap; }
-  .number-setup .field { flex: 1 1 200px; }
+  .inline-row { display: flex; gap: 8px; align-items: center; }
+  .inline-row input { flex: 1; }
+  code.share {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px; background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 2px 6px; word-break: break-all; color: var(--text);
+  }
 
   .banner { border-radius: 10px; padding: 12px 14px; font-size: 15px; margin-bottom: 18px; }
   .banner.err { background: var(--danger-soft); color: var(--danger); border: 1px solid currentColor; }
@@ -253,15 +258,22 @@
         <a class="btn wa wide" id="wa-link" target="_blank" rel="noopener">Mandalo su WhatsApp</a>
         <p class="to" id="wa-to"></p>
 
-        <div class="number-setup" id="number-setup" hidden>
-          <div class="field">
-            <label for="wa-number">Numero WhatsApp di papà</label>
+        <div class="number-setup field" id="number-setup" hidden>
+          <label for="wa-number">Numero WhatsApp di papà</label>
+          <div class="inline-row">
             <input type="tel" id="wa-number" placeholder="+39 333 1234567" autocomplete="tel">
-            <p class="hint">Con il numero salvato, WhatsApp si apre già sulla chat giusta.</p>
-            <p class="error" id="err-wa-number" role="alert"></p>
+            <button type="button" class="btn" id="btn-save-number">Salva</button>
           </div>
-          <button type="button" class="btn" id="btn-save-number">Salva</button>
+          <p class="hint">Con il numero salvato, WhatsApp si apre già sulla chat giusta.</p>
+          <p class="error" id="err-wa-number" role="alert"></p>
         </div>
+
+        <p class="to" id="share-row" hidden>
+          Link con il numero già dentro, da mandare a Petra:
+          <code class="share" id="share-link"></code>
+          <button type="button" class="subtle" id="btn-copy-link">copia il link</button>
+          <span class="hint" id="copy-link-done" hidden>Copiato ✓</span>
+        </p>
 
         <div>
           <button type="button" class="subtle" id="btn-copy">Copia il messaggio</button>
@@ -381,6 +393,39 @@
     return "+" + digits;
   }
 
+  /* Numero passato nella URL: ?tel=+39333... (accetta anche papa= e numero=).
+     Dentro un iframe la query sta sulla pagina che ci ospita: la si legge dal
+     referrer, che è l'unica parte della URL genitore visibile da qui. */
+  function numberFromUrl() {
+    var keys = ["tel", "papa", "numero"];
+    var sources = [window.location.search, window.location.hash.replace(/^#/, "?")];
+    try {
+      if (window.top !== window.self && document.referrer) {
+        sources.push(new URL(document.referrer).search);
+      }
+    } catch (e) { /* referrer non leggibile: pazienza */ }
+
+    for (var i = 0; i < sources.length; i++) {
+      if (!sources[i]) { continue; }
+      var params;
+      try { params = new URLSearchParams(sources[i]); } catch (e) { continue; }
+      for (var k = 0; k < keys.length; k++) {
+        var digits = normalizeNumber(params.get(keys[k]) || "");
+        if (digits) { return digits; }
+      }
+    }
+    return "";
+  }
+
+  /* URL di questa pagina con il numero già impostato, da mandare a Petra. */
+  function shareLink(digits) {
+    var base = window.location.href;
+    try {
+      if (window.top !== window.self && document.referrer) { base = document.referrer; }
+    } catch (e) { /* si resta sulla URL locale */ }
+    return base.split("?")[0].split("#")[0] + "?tel=" + encodeURIComponent("+" + digits);
+  }
+
   function loadNumber() {
     try { return normalizeNumber(window.localStorage.getItem(NUMBER_KEY) || ""); }
     catch (e) { return ""; }
@@ -491,6 +536,14 @@
       : 'WhatsApp ti chiede a chi mandarlo — <button type="button" class="subtle" data-change>salva il numero di papà</button> per aprire subito la sua chat.';
     $("#number-setup").hidden = true;
     $("#copy-done").hidden = true;
+    renderShareLink(number);
+  }
+
+  function renderShareLink(number) {
+    var row = $("#share-row");
+    row.hidden = !number;
+    $("#copy-link-done").hidden = true;
+    if (number) { $("#share-link").textContent = shareLink(number); }
   }
 
   function openNumberSetup() {
@@ -526,9 +579,25 @@
     }
   }
 
-  function selectMessage() {
+  function copyShareLink() {
+    var text = $("#share-link").textContent;
+    var shown = function () {
+      $("#copy-link-done").hidden = false;
+      window.setTimeout(function () { $("#copy-link-done").hidden = true; }, 2500);
+    };
+    var fallback = function () { selectNode($("#share-link")); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(shown, fallback);
+    } else {
+      fallback();
+    }
+  }
+
+  function selectMessage() { selectNode($("#msg-preview")); }
+
+  function selectNode(el) {
     var range = document.createRange();
-    range.selectNodeContents($("#msg-preview"));
+    range.selectNodeContents(el);
     var sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(range);
@@ -593,6 +662,7 @@
       $("#wa-number").removeAttribute("aria-invalid");
     });
     $("#btn-copy").addEventListener("click", copyMessage);
+    $("#btn-copy-link").addEventListener("click", copyShareLink);
 
     $("#btn-edit").addEventListener("click", function () { openForm(booking); });
 
@@ -606,6 +676,8 @@
 
   initDateBounds();
   bind();
+  var urlNumber = numberFromUrl();
+  if (urlNumber) { storeNumber(urlNumber); }
   booking = loadBooking();
   if (booking) { renderDone(booking); } else { openForm(null); }
 })();

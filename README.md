@@ -52,6 +52,25 @@ Il numero si scrive come viene: `+39 333 1234567`, `0039 333 1234567` o `333 123
 (a dieci cifre che iniziano per 3 viene aggiunto il prefisso 39). Resta salvato per le
 volte successive.
 
+### Numero passato nella URL
+
+Il numero si può impostare direttamente nel link, così chi lo riceve non deve digitarlo:
+
+```
+index.html?tel=%2B393331234567
+```
+
+Valgono anche `?papa=` e `?numero=`, e lo stesso parametro nel frammento
+(`#tel=…`). Il valore viene normalizzato e salvato nel browser, quindi resta valido
+anche riaprendo la pagina senza parametro; un parametro nuovo ha la precedenza su quello
+salvato, uno non valido viene ignorato.
+
+Quando la pagina è dentro un `iframe` il parametro sta nella URL della pagina che la
+ospita: in quel caso viene letto dal `referrer`.
+
+Aprendo **cambia numero** la pagina mostra il link già pronto con il numero dentro,
+con un pulsante per copiarlo.
+
 ### Regole applicate
 
 - Si prenota da oggi fino a 30 giorni in anticipo.
