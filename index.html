@@ -20,6 +20,8 @@
     --danger-soft: #fdecea;
     --ok: #1e7a45;
     --ok-soft: #e6f5ec;
+    --wa: #128c7e;
+    --wa-text: #ffffff;
     --radius: 12px;
     --shadow: 0 1px 2px rgba(16,24,40,.06), 0 8px 24px rgba(16,24,40,.06);
   }
@@ -38,6 +40,8 @@
       --danger-soft: #3a1f1c;
       --ok: #6fd39a;
       --ok-soft: #16301f;
+      --wa: #25d366;
+      --wa-text: #06281c;
       --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
     }
   }
@@ -55,6 +59,8 @@
     --danger-soft: #3a1f1c;
     --ok: #6fd39a;
     --ok-soft: #16301f;
+    --wa: #25d366;
+    --wa-text: #06281c;
     --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
   }
   * { box-sizing: border-box; }
@@ -123,28 +129,39 @@
 
   .actions { display: flex; gap: 10px; margin-top: 26px; flex-wrap: wrap; align-items: center; }
   .actions .spacer { flex: 1; }
-  button.btn {
-    font: inherit; font-weight: 600; cursor: pointer; border-radius: 10px;
+  .btn {
+    font: inherit; font-weight: 600; cursor: pointer; border-radius: 10px; text-decoration: none;
     padding: 11px 20px; border: 1px solid var(--border); background: var(--surface); color: var(--text);
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   }
-  button.btn:hover { background: var(--surface-2); }
-  button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
-  button.primary:hover { filter: brightness(1.06); background: var(--accent); }
-  button.link {
+  .btn:hover { background: var(--surface-2); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+  .btn.primary:hover { filter: brightness(1.06); background: var(--accent); }
+  .btn.wa { background: var(--wa); border-color: var(--wa); color: var(--wa-text); }
+  .btn.wa:hover { filter: brightness(1.06); background: var(--wa); }
+  .btn.wide { width: 100%; }
+  .link {
     background: none; border: none; color: var(--danger); cursor: pointer;
     font: inherit; padding: 6px; text-decoration: underline;
   }
+  button.subtle {
+    background: none; border: none; color: var(--accent); cursor: pointer;
+    font: inherit; font-size: 13px; padding: 2px 4px; text-decoration: underline;
+  }
+
+  .send { margin-top: 22px; display: flex; flex-direction: column; gap: 10px; }
+  .preview {
+    margin: 0; white-space: pre-wrap; word-break: break-word;
+    font: 14px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 14px; color: var(--text);
+  }
+  .send .to { font-size: 13px; color: var(--muted); line-height: 1.7; margin: 0; }
+  .number-setup { display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap; }
+  .number-setup .field { flex: 1 1 200px; }
 
   .banner { border-radius: 10px; padding: 12px 14px; font-size: 15px; margin-bottom: 18px; }
   .banner.err { background: var(--danger-soft); color: var(--danger); border: 1px solid currentColor; }
-
-  .summary { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 18px; }
-  .summary .row {
-    display: flex; gap: 16px; padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 15px;
-  }
-  .summary .row:last-child { border-bottom: none; }
-  .summary .row dt { flex: 0 0 34%; color: var(--muted); margin: 0; }
-  .summary .row dd { margin: 0; flex: 1; }
 
   .done-mark {
     width: 56px; height: 56px; border-radius: 50%; background: var(--ok-soft); color: var(--ok);
@@ -230,11 +247,32 @@
         <span class="sub" id="done-place"></span>
       </div>
 
-      <dl class="summary" id="done-summary"></dl>
-      <p class="hint" style="margin-top:12px;">Codice ritiro: <span class="code" id="done-code"></span></p>
+      <div class="send">
+        <p class="hint" id="msg-label">Messaggio pronto da mandare:</p>
+        <p class="preview" id="msg-preview"></p>
+        <a class="btn wa wide" id="wa-link" target="_blank" rel="noopener">Mandalo su WhatsApp</a>
+        <p class="to" id="wa-to"></p>
+
+        <div class="number-setup" id="number-setup" hidden>
+          <div class="field">
+            <label for="wa-number">Numero WhatsApp di papà</label>
+            <input type="tel" id="wa-number" placeholder="+39 333 1234567" autocomplete="tel">
+            <p class="hint">Con il numero salvato, WhatsApp si apre già sulla chat giusta.</p>
+            <p class="error" id="err-wa-number" role="alert"></p>
+          </div>
+          <button type="button" class="btn" id="btn-save-number">Salva</button>
+        </div>
+
+        <div>
+          <button type="button" class="subtle" id="btn-copy">Copia il messaggio</button>
+          <span class="hint" id="copy-done" hidden>Copiato ✓</span>
+        </div>
+      </div>
+
+      <p class="hint" style="margin-top:16px;">Codice ritiro: <span class="code" id="done-code"></span></p>
 
       <div class="actions">
-        <button type="button" class="btn primary" id="btn-edit">Modifica</button>
+        <button type="button" class="btn" id="btn-edit">Modifica</button>
         <span class="spacer"></span>
         <button type="button" class="link" id="btn-delete">Annulla il ritiro</button>
       </div>
@@ -250,6 +288,7 @@
 
   /* ---------------------------------------------------------------- Config */
   var STORAGE_KEY = "ritiro.petra.v1";
+  var NUMBER_KEY = "ritiro.petra.papa.v1";
   var MAX_DAYS_AHEAD = 30;
 
   /* ------------------------------------------------------------- Utilities */
@@ -287,10 +326,6 @@
     if (diff === 2) { return "dopodomani"; }
     return d.toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" });
   }
-  function fullDate(iso) {
-    var d = parseISO(iso);
-    return d ? d.toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long", year: "numeric" }) : "—";
-  }
   function newCode() {
     var alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     var bytes = new Uint8Array(4);
@@ -302,6 +337,56 @@
     var out = "";
     for (var i = 0; i < 4; i++) { out += alphabet.charAt(bytes[i] % alphabet.length); }
     return "PETRA-" + out;
+  }
+
+  /* ------------------------------------------------------- Messaggio WhatsApp */
+  function whenSentence(b) {
+    var day = parseISO(b.date);
+    if (!day) { return "—"; }
+    var full = day.toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" });
+    var label = dayLabel(b.date);
+    var when = label === full ? full : label + " (" + full + ")";
+    return when + " alle " + b.time;
+  }
+
+  function messageFor(b) {
+    var lines = [
+      "Ciao papà! Puoi venire a prendermi?",
+      "",
+      "🎒 Pacco Petra",
+      "📍 " + b.place,
+      "🕓 " + whenSentence(b)
+    ];
+    if (b.notes) { lines.push("📝 " + b.notes); }
+    return lines.join("\n");
+  }
+
+  /* Numero in formato wa.me: solo cifre, prefisso internazionale incluso. */
+  function normalizeNumber(input) {
+    var raw = String(input || "").trim();
+    var digits = raw.replace(/\D/g, "");
+    if (!digits) { return ""; }
+    if (raw.charAt(0) !== "+") {
+      if (digits.indexOf("00") === 0) { digits = digits.slice(2); }
+      else if (digits.length === 10 && digits.charAt(0) === "3") { digits = "39" + digits; }
+    }
+    return digits.length >= 8 && digits.length <= 15 ? digits : "";
+  }
+  function prettyNumber(digits) {
+    if (!digits) { return ""; }
+    if (digits.indexOf("39") === 0 && digits.length >= 11) {
+      var rest = digits.slice(2);
+      return "+39 " + rest.slice(0, 3) + " " + rest.slice(3);
+    }
+    return "+" + digits;
+  }
+
+  function loadNumber() {
+    try { return normalizeNumber(window.localStorage.getItem(NUMBER_KEY) || ""); }
+    catch (e) { return ""; }
+  }
+  function storeNumber(digits) {
+    try { window.localStorage.setItem(NUMBER_KEY, digits); } catch (e) {}
   }
 
   /* ---------------------------------------------------------------- Storage */
@@ -388,16 +473,65 @@
     $("#done-when").textContent = dayLabel(b.date) + " alle " + b.time;
     $("#done-place").textContent = b.place;
     $("#done-code").textContent = b.code;
-    var rows = [
-      { dt: "Pacco", dd: "Pacco Petra · 1 collo, fragile" },
-      { dt: "Dove", dd: b.place },
-      { dt: "Quando", dd: fullDate(b.date) + " alle " + b.time }
-    ];
-    if (b.notes) { rows.push({ dt: "Note", dd: b.notes }); }
-    $("#done-summary").innerHTML = rows.map(function (row) {
-      return '<div class="row"><dt>' + esc(row.dt) + "</dt><dd>" + esc(row.dd) + "</dd></div>";
-    }).join("");
+    renderSend(b);
     showView("done");
+  }
+
+  function renderSend(b) {
+    var message = messageFor(b);
+    var number = loadNumber();
+    var link = $("#wa-link");
+
+    $("#msg-preview").textContent = message;
+    link.href = "https://wa.me/" + number + "?text=" + encodeURIComponent(message);
+    link.textContent = number ? "Mandalo a papà su WhatsApp" : "Mandalo su WhatsApp";
+    $("#wa-to").innerHTML = number
+      ? "Si apre la chat con <strong>" + esc(prettyNumber(number)) +
+        '</strong> · <button type="button" class="subtle" data-change>cambia numero</button>'
+      : 'WhatsApp ti chiede a chi mandarlo — <button type="button" class="subtle" data-change>salva il numero di papà</button> per aprire subito la sua chat.';
+    $("#number-setup").hidden = true;
+    $("#copy-done").hidden = true;
+  }
+
+  function openNumberSetup() {
+    var box = $("#number-setup");
+    box.hidden = false;
+    $("#err-wa-number").textContent = "";
+    $("#wa-number").value = prettyNumber(loadNumber());
+    $("#wa-number").focus();
+  }
+
+  function saveNumber() {
+    var digits = normalizeNumber($("#wa-number").value);
+    if (!digits) {
+      $("#err-wa-number").textContent = "Numero non valido. Scrivilo con il prefisso, es. +39 333 1234567.";
+      $("#wa-number").setAttribute("aria-invalid", "true");
+      return;
+    }
+    $("#wa-number").removeAttribute("aria-invalid");
+    storeNumber(digits);
+    if (booking) { renderSend(booking); }
+  }
+
+  function copyMessage() {
+    var text = $("#msg-preview").textContent;
+    var shown = function () {
+      $("#copy-done").hidden = false;
+      window.setTimeout(function () { $("#copy-done").hidden = true; }, 2500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(shown, selectMessage);
+    } else {
+      selectMessage();
+    }
+  }
+
+  function selectMessage() {
+    var range = document.createRange();
+    range.selectNodeContents($("#msg-preview"));
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
   }
 
   function openForm(existing) {
@@ -446,6 +580,19 @@
     $("#btn-cancel-edit").addEventListener("click", function () {
       if (booking) { renderDone(booking); }
     });
+
+    $("#wa-to").addEventListener("click", function (event) {
+      if (event.target.hasAttribute("data-change")) { openNumberSetup(); }
+    });
+    $("#btn-save-number").addEventListener("click", saveNumber);
+    $("#wa-number").addEventListener("keydown", function (event) {
+      if (event.key === "Enter") { event.preventDefault(); saveNumber(); }
+    });
+    $("#wa-number").addEventListener("input", function () {
+      $("#err-wa-number").textContent = "";
+      $("#wa-number").removeAttribute("aria-invalid");
+    });
+    $("#btn-copy").addEventListener("click", copyMessage);
 
     $("#btn-edit").addEventListener("click", function () { openForm(booking); });
 
