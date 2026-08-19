@@ -1,7 +1,7 @@
 # Ritiro
 
 Single Page Application in HTML e JavaScript puri (nessun framework, nessuna dipendenza)
-per prenotare il ritiro a domicilio di un pacco.
+per prenotare il ritiro di **Pacco Petra**: dove passare a prenderla e a che ora.
 
 ## Come si usa
 
@@ -14,35 +14,29 @@ python3 -m http.server 8000   # poi apri http://localhost:8000
 
 ## Funzionalità
 
-**Prenotazione in 4 passi**, con barra di avanzamento e validazione a ogni passo:
+Il pacco è sempre lo stesso — Pacco Petra, 1 collo, fragile — quindi il modulo chiede
+soltanto l'essenziale:
 
-1. **Ritiro** — contatti del mittente e indirizzo di ritiro (via, CAP, città, provincia, note per il corriere).
-2. **Pacco** — contenuto, numero di colli, peso, dimensioni, opzioni fragile/assicurazione e dati del destinatario.
-3. **Data e ora** — data del ritiro e fascia oraria, con servizio standard o express.
-4. **Conferma** — riepilogo completo, preventivo dettagliato e accettazione delle condizioni.
+- **Dove la prendo** (obbligatorio)
+- **Giorno** e **ora** (obbligatori)
+- **Note** (facoltativo): con chi è, cosa deve portare, dove aspetta
 
-Al termine viene generato un codice di prenotazione (`RIT-XXXXXX`) e il riepilogo del ritiro.
+Alla conferma compare il riepilogo con il giorno in forma leggibile ("oggi", "domani",
+"dopodomani" o la data estesa), l'ora, il luogo e un codice ritiro.
+Da lì si può **modificare** la prenotazione (il codice resta lo stesso) oppure
+**annullarla**.
+
+C'è una sola prenotazione alla volta: riaprendo la pagina si ritrova quella attiva.
 
 ### Regole applicate
 
-- Il ritiro si prenota da domani fino a 30 giorni in anticipo; la domenica non è disponibile.
-- Ogni fascia oraria accetta al massimo 3 ritiri: le fasce piene vengono mostrate come "Al completo" e disabilitate.
-- Validazione dei campi: email, telefono, CAP a 5 cifre, sigla provincia, 1–10 colli, peso 0,1–50 kg, misure 1–200 cm.
-- Preventivo calcolato su base + peso oltre il primo kg + colli aggiuntivi + fragile + assicurazione + express.
-
-### Le mie prenotazioni
-
-Sezione con l'elenco dei ritiri prenotati, il loro stato (confermato / completato / annullato)
-e la possibilità di annullare una prenotazione fino al giorno prima. L'annullamento libera
-subito il posto nella fascia oraria.
+- Si prenota da oggi fino a 30 giorni in anticipo.
+- Luogo, giorno e ora sono obbligatori; gli errori sono mostrati sotto ai campi.
 
 ## Dati e persistenza
 
-Tutto gira lato client: i dati vengono salvati nel `localStorage` del browser e non viene
-inviata alcuna richiesta di rete.
-
-- `ritiro.bookings.v1` — le prenotazioni effettuate
-- `ritiro.draft.v1` — la bozza del modulo, ripristinata se ricarichi la pagina
+Tutto gira lato client: la prenotazione è salvata nel `localStorage` del browser
+(chiave `ritiro.petra.v1`) e non viene inviata alcuna richiesta di rete.
 
 ## Struttura
 

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ritiro · Prenota il ritiro del tuo pacco</title>
-<meta name="description" content="Prenota in pochi passi il ritiro di un pacco a domicilio: indirizzo, dettagli del collo, data e fascia oraria.">
+<title>Ritiro · Pacco Petra</title>
+<meta name="description" content="Prenota il ritiro di Pacco Petra: dove passare a prenderla e a che ora.">
 <style>
   :root {
     --bg: #f5f6f8;
@@ -48,13 +48,9 @@
     color: var(--text);
     font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
-  a { color: var(--accent); }
-  .wrap { max-width: 860px; margin: 0 auto; padding: 24px 16px 64px; }
+  .wrap { max-width: 620px; margin: 0 auto; padding: 24px 16px 64px; }
 
-  header.top {
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-    padding: 8px 0 20px;
-  }
+  header.top { display: flex; align-items: center; padding: 8px 0 20px; }
   .logo {
     display: inline-flex; align-items: center; gap: 10px;
     font-weight: 700; font-size: 20px; letter-spacing: -.01em;
@@ -64,95 +60,52 @@
     background: var(--accent); color: var(--accent-text);
     display: grid; place-items: center; font-size: 18px;
   }
-  nav.tabs { margin-left: auto; display: flex; gap: 6px; }
-  nav.tabs button {
-    background: transparent; border: 1px solid transparent; color: var(--muted);
-    padding: 8px 14px; border-radius: 999px; cursor: pointer; font: inherit; font-size: 15px;
-  }
-  nav.tabs button:hover { color: var(--text); background: var(--surface-2); }
-  nav.tabs button[aria-current="page"] {
-    background: var(--accent-soft); color: var(--accent); border-color: var(--accent);
-    font-weight: 600;
-  }
 
   .card {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px;
   }
   h1 { font-size: 26px; margin: 0 0 6px; letter-spacing: -.02em; }
-  h2 { font-size: 19px; margin: 0 0 4px; letter-spacing: -.01em; }
-  h3 { font-size: 15px; margin: 22px 0 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
-  .lead { color: var(--muted); margin: 0 0 20px; }
+  .lead { color: var(--muted); margin: 0 0 22px; }
 
-  ol.steps { display: flex; list-style: none; margin: 0 0 24px; padding: 0; gap: 6px; }
-  ol.steps li {
-    flex: 1; font-size: 13px; color: var(--muted); padding-top: 10px;
-    border-top: 3px solid var(--border); text-align: left;
+  .parcel {
+    display: flex; align-items: center; gap: 14px;
+    border: 1px solid var(--border); border-radius: 10px;
+    background: var(--surface-2); padding: 14px 16px; margin-bottom: 22px;
   }
-  ol.steps li[data-state="done"] { border-top-color: var(--ok); color: var(--text); }
-  ol.steps li[data-state="current"] { border-top-color: var(--accent); color: var(--accent); font-weight: 600; }
-  ol.steps li .num { display: block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+  .parcel .icon {
+    width: 44px; height: 44px; border-radius: 10px; flex: 0 0 44px;
+    background: var(--accent-soft); color: var(--accent);
+    display: grid; place-items: center; font-size: 22px;
+  }
+  .parcel .name { font-weight: 700; font-size: 17px; display: block; }
+  .parcel .desc { color: var(--muted); font-size: 14px; display: block; }
 
-  .grid { display: grid; gap: 14px 16px; grid-template-columns: repeat(6, 1fr); }
-  .field { display: flex; flex-direction: column; gap: 6px; grid-column: span 6; }
-  .col-1 { grid-column: span 1; }
-  .col-2 { grid-column: span 2; }
-  .col-3 { grid-column: span 3; }
-  .col-4 { grid-column: span 4; }
-  @media (max-width: 620px) {
-    .col-1 { grid-column: span 2; }
-    .col-2, .col-3, .col-4 { grid-column: span 6; }
-    .wrap { padding-top: 12px; }
+  .grid { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
+  .field { display: flex; flex-direction: column; gap: 6px; grid-column: span 2; }
+  .half { grid-column: span 1; }
+  @media (max-width: 560px) {
+    .half { grid-column: span 2; }
     .card { padding: 18px; }
-    ol.steps li { font-size: 0; padding-top: 8px; }
-    ol.steps li .num { font-size: 11px; }
   }
   label { font-size: 14px; font-weight: 600; }
   label .opt { font-weight: 400; color: var(--muted); }
-  input[type="text"], input[type="tel"], input[type="email"], input[type="number"],
-  input[type="date"], select, textarea {
+  input[type="text"], input[type="tel"], input[type="date"], input[type="time"], textarea {
     font: inherit; color: var(--text); background: var(--surface);
     border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; width: 100%;
   }
-  textarea { resize: vertical; min-height: 76px; }
-  input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible {
+  textarea { resize: vertical; min-height: 72px; }
+  input:focus-visible, textarea:focus-visible, button:focus-visible {
     outline: 2px solid var(--accent); outline-offset: 2px;
   }
-  input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="true"] {
+  input[aria-invalid="true"], textarea[aria-invalid="true"] {
     border-color: var(--danger); background: var(--danger-soft);
   }
   .hint { font-size: 13px; color: var(--muted); }
-  .error { font-size: 13px; color: var(--danger); min-height: 0; }
+  .error { font-size: 13px; color: var(--danger); }
   .error:empty { display: none; }
 
-  .check { display: flex; align-items: flex-start; gap: 10px; font-weight: 400; font-size: 15px; }
-  .check input { margin-top: 3px; width: 18px; height: 18px; accent-color: var(--accent); }
-
-  .options { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
-  @media (max-width: 620px) { .options { grid-template-columns: 1fr; } }
-  .option {
-    border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px;
-    display: flex; gap: 10px; align-items: flex-start; cursor: pointer; background: var(--surface);
-  }
-  .option:hover { border-color: var(--accent); }
-  .option input { margin-top: 3px; accent-color: var(--accent); }
-  .option:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
-  .option .t { font-weight: 600; display: block; }
-  .option .d { font-size: 13px; color: var(--muted); }
-
-  .slots { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
-  .slot {
-    font: inherit; text-align: left; cursor: pointer; background: var(--surface);
-    border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; color: var(--text);
-  }
-  .slot:hover:not(:disabled) { border-color: var(--accent); }
-  .slot[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
-  .slot:disabled { opacity: .5; cursor: not-allowed; }
-  .slot .time { font-weight: 600; display: block; }
-  .slot .left { font-size: 13px; color: var(--muted); }
-  .slot[aria-pressed="true"] .left { color: inherit; }
-
-  .actions { display: flex; gap: 10px; margin-top: 26px; flex-wrap: wrap; }
+  .actions { display: flex; gap: 10px; margin-top: 26px; flex-wrap: wrap; align-items: center; }
   .actions .spacer { flex: 1; }
   button.btn {
     font: inherit; font-weight: 600; cursor: pointer; border-radius: 10px;
@@ -162,58 +115,36 @@
   button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
   button.primary:hover { filter: brightness(1.06); background: var(--accent); }
   button.link {
-    background: none; border: none; color: var(--accent); cursor: pointer;
-    font: inherit; padding: 4px; text-decoration: underline;
+    background: none; border: none; color: var(--danger); cursor: pointer;
+    font: inherit; padding: 6px; text-decoration: underline;
   }
-  button.danger-link { color: var(--danger); }
 
-  .summary { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .banner { border-radius: 10px; padding: 12px 14px; font-size: 15px; margin-bottom: 18px; }
+  .banner.err { background: var(--danger-soft); color: var(--danger); border: 1px solid currentColor; }
+
+  .summary { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 18px; }
   .summary .row {
     display: flex; gap: 16px; padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 15px;
   }
   .summary .row:last-child { border-bottom: none; }
-  .summary .row dt { flex: 0 0 40%; color: var(--muted); margin: 0; }
+  .summary .row dt { flex: 0 0 34%; color: var(--muted); margin: 0; }
   .summary .row dd { margin: 0; flex: 1; }
-  .summary .head { background: var(--surface-2); font-weight: 600; font-size: 13px;
-    text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
-  .total {
-    display: flex; justify-content: space-between; align-items: baseline;
-    margin-top: 16px; padding: 14px; border-radius: 10px; background: var(--accent-soft); color: var(--accent);
-  }
-  .total .amount { font-size: 24px; font-weight: 700; }
-  .price-lines { list-style: none; margin: 10px 0 0; padding: 0; font-size: 14px; color: var(--muted); }
-  .price-lines li { display: flex; justify-content: space-between; padding: 3px 2px; }
-
-  .banner { border-radius: 10px; padding: 12px 14px; font-size: 15px; margin-bottom: 18px; }
-  .banner.err { background: var(--danger-soft); color: var(--danger); border: 1px solid currentColor; }
 
   .done-mark {
     width: 56px; height: 56px; border-radius: 50%; background: var(--ok-soft); color: var(--ok);
     display: grid; place-items: center; font-size: 28px; margin-bottom: 14px;
   }
+  .when {
+    margin-top: 18px; padding: 16px; border-radius: 10px;
+    background: var(--accent-soft); color: var(--accent);
+  }
+  .when .big { font-size: 22px; font-weight: 700; display: block; letter-spacing: -.01em; }
+  .when .sub { font-size: 14px; }
   .code {
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 22px; font-weight: 700; letter-spacing: .06em;
+    font-size: 20px; font-weight: 700; letter-spacing: .06em;
   }
-
-  .booking {
-    border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px;
-    display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap;
-  }
-  .booking .info { flex: 1; min-width: 220px; }
-  .booking .meta { color: var(--muted); font-size: 14px; }
-  .badge {
-    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
-    padding: 4px 9px; border-radius: 999px; background: var(--ok-soft); color: var(--ok); white-space: nowrap;
-  }
-  .badge.cancelled { background: var(--danger-soft); color: var(--danger); }
-  .badge.past { background: var(--surface-2); color: var(--muted); }
-  .empty { color: var(--muted); text-align: center; padding: 32px 12px; }
   footer.foot { text-align: center; color: var(--muted); font-size: 13px; margin-top: 24px; }
-  .sr-only {
-    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
-  }
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -221,225 +152,80 @@
 <div class="wrap">
   <header class="top">
     <span class="logo"><span class="mark" aria-hidden="true">↥</span> Ritiro</span>
-    <nav class="tabs" aria-label="Sezioni">
-      <button type="button" id="tab-new" aria-current="page">Nuova prenotazione</button>
-      <button type="button" id="tab-list">Le mie prenotazioni <span id="tab-count"></span></button>
-    </nav>
   </header>
 
-  <!-- ============ VISTA: PRENOTAZIONE ============ -->
-  <main id="view-new">
+  <!-- ============ VISTA: MODULO ============ -->
+  <main id="view-form">
     <div class="card">
-      <h1>Prenota il ritiro del tuo pacco</h1>
-      <p class="lead">Il corriere passa all'indirizzo che indichi, nella fascia oraria che scegli. Bastano quattro passaggi.</p>
+      <h1 id="form-title">Prenota il ritiro</h1>
+      <p class="lead" id="form-lead">Dimmi dove e quando devo passare a prendere Petra.</p>
 
-      <ol class="steps" id="stepbar">
-        <li data-step="1"><span class="num">Passo 1</span>Ritiro</li>
-        <li data-step="2"><span class="num">Passo 2</span>Pacco</li>
-        <li data-step="3"><span class="num">Passo 3</span>Data e ora</li>
-        <li data-step="4"><span class="num">Passo 4</span>Conferma</li>
-      </ol>
+      <div class="parcel">
+        <span class="icon" aria-hidden="true">🎒</span>
+        <span>
+          <span class="name">Pacco Petra</span>
+          <span class="desc">1 collo · fragile · maneggiare con cura</span>
+        </span>
+      </div>
 
       <div class="banner err" id="form-banner" role="alert" hidden></div>
 
       <form id="booking-form" novalidate>
-        <!-- STEP 1 -->
-        <section class="step" data-step="1" aria-labelledby="h-step1">
-          <h2 id="h-step1">Dove ritiriamo il pacco?</h2>
-          <p class="lead">Indica l'indirizzo di ritiro e come contattarti.</p>
-          <div class="grid">
-            <div class="field col-3">
-              <label for="senderName">Nome e cognome</label>
-              <input type="text" id="senderName" name="senderName" autocomplete="name">
-              <p class="error" id="err-senderName" role="alert"></p>
-            </div>
-            <div class="field col-3">
-              <label for="senderPhone">Telefono</label>
-              <input type="tel" id="senderPhone" name="senderPhone" autocomplete="tel" placeholder="es. 333 1234567">
-              <p class="error" id="err-senderPhone" role="alert"></p>
-            </div>
-            <div class="field col-6">
-              <label for="senderEmail">Email</label>
-              <input type="email" id="senderEmail" name="senderEmail" autocomplete="email" placeholder="nome@esempio.it">
-              <p class="hint">Ci serve per inviarti la conferma e il codice di prenotazione.</p>
-              <p class="error" id="err-senderEmail" role="alert"></p>
-            </div>
-            <div class="field col-6">
-              <label for="pickupStreet">Indirizzo (via e numero civico)</label>
-              <input type="text" id="pickupStreet" name="pickupStreet" autocomplete="street-address">
-              <p class="error" id="err-pickupStreet" role="alert"></p>
-            </div>
-            <div class="field col-2">
-              <label for="pickupZip">CAP</label>
-              <input type="text" id="pickupZip" name="pickupZip" inputmode="numeric" maxlength="5" autocomplete="postal-code">
-              <p class="error" id="err-pickupZip" role="alert"></p>
-            </div>
-            <div class="field col-3">
-              <label for="pickupCity">Città</label>
-              <input type="text" id="pickupCity" name="pickupCity" autocomplete="address-level2">
-              <p class="error" id="err-pickupCity" role="alert"></p>
-            </div>
-            <div class="field col-1">
-              <label for="pickupProvince">Prov.</label>
-              <input type="text" id="pickupProvince" name="pickupProvince" maxlength="2" autocomplete="address-level1" placeholder="MI">
-              <p class="error" id="err-pickupProvince" role="alert"></p>
-            </div>
-            <div class="field col-6">
-              <label for="pickupNotes">Note per il corriere <span class="opt">(facoltativo)</span></label>
-              <textarea id="pickupNotes" name="pickupNotes" maxlength="300" placeholder="Citofono, piano, orari di accesso, portineria…"></textarea>
-            </div>
+        <div class="grid">
+          <div class="field">
+            <label for="place">Dove la prendo</label>
+            <input type="text" id="place" placeholder="es. Scuola, Via Verdi 8" autocomplete="off">
+            <p class="error" id="err-place" role="alert"></p>
           </div>
-        </section>
-
-        <!-- STEP 2 -->
-        <section class="step" data-step="2" hidden aria-labelledby="h-step2">
-          <h2 id="h-step2">Cosa spediamo?</h2>
-          <p class="lead">Dati indicativi: il corriere verifica peso e misure al ritiro.</p>
-          <div class="grid">
-            <div class="field col-3">
-              <label for="parcelType">Contenuto</label>
-              <select id="parcelType" name="parcelType">
-                <option value="Documenti">Documenti</option>
-                <option value="Abbigliamento">Abbigliamento</option>
-                <option value="Elettronica">Elettronica</option>
-                <option value="Casa e arredo">Casa e arredo</option>
-                <option value="Altro" selected>Altro</option>
-              </select>
-              <p class="error" id="err-parcelType" role="alert"></p>
-            </div>
-            <div class="field col-3">
-              <label for="parcelCount">Numero di colli</label>
-              <input type="number" id="parcelCount" name="parcelCount" min="1" max="10" step="1" value="1">
-              <p class="error" id="err-parcelCount" role="alert"></p>
-            </div>
-            <div class="field col-3">
-              <label for="parcelWeight">Peso totale (kg)</label>
-              <input type="number" id="parcelWeight" name="parcelWeight" min="0.1" max="50" step="0.1" placeholder="es. 2.5">
-              <p class="error" id="err-parcelWeight" role="alert"></p>
-            </div>
-            <div class="field col-3">
-              <label for="dimL">Dimensioni (cm) · L × P × H</label>
-              <div style="display:flex; gap:8px;">
-                <input type="number" id="dimL" name="dimL" min="1" max="200" step="1" placeholder="L" aria-label="Lunghezza in centimetri">
-                <input type="number" id="dimW" name="dimW" min="1" max="200" step="1" placeholder="P" aria-label="Profondità in centimetri">
-                <input type="number" id="dimH" name="dimH" min="1" max="200" step="1" placeholder="H" aria-label="Altezza in centimetri">
-              </div>
-              <p class="error" id="err-dims" role="alert"></p>
-            </div>
-            <div class="field col-3">
-              <label class="check"><input type="checkbox" id="fragile" name="fragile"> Contenuto fragile <span class="opt">(+ 2,50 €)</span></label>
-              <label class="check"><input type="checkbox" id="insurance" name="insurance"> Assicurazione fino a 500 € <span class="opt">(+ 4,00 €)</span></label>
-            </div>
-
-            <div class="field col-6"><h3 style="margin:8px 0 0;">Destinatario</h3></div>
-            <div class="field col-3">
-              <label for="recipientName">Nome e cognome</label>
-              <input type="text" id="recipientName" name="recipientName">
-              <p class="error" id="err-recipientName" role="alert"></p>
-            </div>
-            <div class="field col-2">
-              <label for="recipientCity">Città di consegna</label>
-              <input type="text" id="recipientCity" name="recipientCity">
-              <p class="error" id="err-recipientCity" role="alert"></p>
-            </div>
-            <div class="field col-1">
-              <label for="recipientZip">CAP</label>
-              <input type="text" id="recipientZip" name="recipientZip" inputmode="numeric" maxlength="5">
-              <p class="error" id="err-recipientZip" role="alert"></p>
-            </div>
+          <div class="field half">
+            <label for="date">Giorno</label>
+            <input type="date" id="date">
+            <p class="error" id="err-date" role="alert"></p>
           </div>
-        </section>
-
-        <!-- STEP 3 -->
-        <section class="step" data-step="3" hidden aria-labelledby="h-step3">
-          <h2 id="h-step3">Quando passiamo a ritirarlo?</h2>
-          <p class="lead">Ritiri dal lunedì al sabato. Puoi prenotare fino a 30 giorni in anticipo.</p>
-          <div class="grid">
-            <div class="field col-3">
-              <label for="pickupDate">Data del ritiro</label>
-              <input type="date" id="pickupDate" name="pickupDate">
-              <p class="error" id="err-pickupDate" role="alert"></p>
-            </div>
-            <div class="field col-6">
-              <label id="slots-label">Fascia oraria</label>
-              <div class="slots" id="slots" role="group" aria-labelledby="slots-label"></div>
-              <p class="hint" id="slots-hint">Ogni fascia accetta un massimo di 3 ritiri.</p>
-              <p class="error" id="err-slot" role="alert"></p>
-            </div>
-            <div class="field col-6">
-              <label id="service-label">Tipo di servizio</label>
-              <div class="options" role="radiogroup" aria-labelledby="service-label">
-                <label class="option">
-                  <input type="radio" name="service" value="standard" checked>
-                  <span><span class="t">Standard</span><span class="d">Consegna in 2-3 giorni lavorativi. Incluso.</span></span>
-                </label>
-                <label class="option">
-                  <input type="radio" name="service" value="express">
-                  <span><span class="t">Express</span><span class="d">Consegna il giorno lavorativo successivo. + 5,00 €</span></span>
-                </label>
-              </div>
-            </div>
+          <div class="field half">
+            <label for="time">Ora</label>
+            <input type="time" id="time">
+            <p class="error" id="err-time" role="alert"></p>
           </div>
-        </section>
-
-        <!-- STEP 4 -->
-        <section class="step" data-step="4" hidden aria-labelledby="h-step4">
-          <h2 id="h-step4">Controlla e conferma</h2>
-          <p class="lead">Verifica i dati prima di inviare la richiesta di ritiro.</p>
-          <dl class="summary" id="summary"></dl>
-          <div class="total">
-            <span>Totale stimato</span>
-            <span class="amount" id="total-amount">—</span>
+          <div class="field">
+            <label for="notes">Note <span class="opt">(facoltativo)</span></label>
+            <textarea id="notes" maxlength="300" placeholder="Con chi è, cosa deve portare, dove aspetta…"></textarea>
           </div>
-          <ul class="price-lines" id="price-lines"></ul>
-          <div class="field" style="margin-top:18px;">
-            <label class="check">
-              <input type="checkbox" id="terms" name="terms">
-              Confermo che i dati sono corretti e accetto le condizioni di servizio e il trattamento dei dati per l'esecuzione del ritiro.
-            </label>
-            <p class="error" id="err-terms" role="alert"></p>
-          </div>
-        </section>
+        </div>
 
         <div class="actions">
-          <button type="button" class="btn" id="btn-back" hidden>← Indietro</button>
+          <button type="button" class="btn" id="btn-cancel-edit" hidden>Annulla modifica</button>
           <span class="spacer"></span>
-          <button type="button" class="btn primary" id="btn-next">Continua →</button>
-          <button type="submit" class="btn primary" id="btn-submit" hidden>Conferma il ritiro</button>
+          <button type="submit" class="btn primary" id="btn-submit">Conferma il ritiro</button>
         </div>
       </form>
     </div>
   </main>
 
-  <!-- ============ VISTA: CONFERMA ============ -->
+  <!-- ============ VISTA: PRENOTAZIONE CONFERMATA ============ -->
   <main id="view-done" hidden>
     <div class="card">
       <div class="done-mark" aria-hidden="true">✓</div>
       <h1>Ritiro prenotato</h1>
-      <p class="lead">Ti abbiamo inviato una email di riepilogo. Tieni il pacco pronto e imballato per la fascia scelta.</p>
-      <p>Codice di prenotazione: <span class="code" id="done-code"></span></p>
-      <dl class="summary" id="done-summary" style="margin-top:18px;"></dl>
+      <p class="lead">Pacco Petra ti aspetta. Non fare tardi.</p>
+
+      <div class="when">
+        <span class="big" id="done-when"></span>
+        <span class="sub" id="done-place"></span>
+      </div>
+
+      <dl class="summary" id="done-summary"></dl>
+      <p class="hint" style="margin-top:12px;">Codice ritiro: <span class="code" id="done-code"></span></p>
+
       <div class="actions">
-        <button type="button" class="btn" id="btn-goto-list">Vedi le mie prenotazioni</button>
+        <button type="button" class="btn primary" id="btn-edit">Modifica</button>
         <span class="spacer"></span>
-        <button type="button" class="btn primary" id="btn-another">Prenota un altro ritiro</button>
+        <button type="button" class="link" id="btn-delete">Annulla il ritiro</button>
       </div>
     </div>
   </main>
 
-  <!-- ============ VISTA: ELENCO ============ -->
-  <main id="view-list" hidden>
-    <div class="card">
-      <h1>Le mie prenotazioni</h1>
-      <p class="lead">Le prenotazioni sono salvate in questo browser. Puoi annullare un ritiro fino al giorno prima.</p>
-      <div id="bookings"></div>
-      <div class="actions">
-        <button type="button" class="btn primary" id="btn-new-from-list">+ Nuova prenotazione</button>
-      </div>
-    </div>
-  </main>
-
-  <footer class="foot">Ritiro · demo dimostrativa. I dati restano nel tuo browser (localStorage), nessun invio a server.</footer>
+  <footer class="foot">Ritiro · la prenotazione resta nel tuo browser, nessun invio a server.</footer>
 </div>
 
 <script>
@@ -447,32 +233,17 @@
   "use strict";
 
   /* ---------------------------------------------------------------- Config */
-  var STORAGE_KEY = "ritiro.bookings.v1";
-  var DRAFT_KEY   = "ritiro.draft.v1";
-  var SLOT_CAPACITY = 3;
-  var SLOTS = [
-    { id: "09-11", label: "09:00 – 11:00" },
-    { id: "11-13", label: "11:00 – 13:00" },
-    { id: "14-16", label: "14:00 – 16:00" },
-    { id: "16-18", label: "16:00 – 18:00" },
-    { id: "18-20", label: "18:00 – 20:00" }
-  ];
-  var PRICE = {
-    base: 6.90, perExtraKg: 0.80, extraColloEach: 3.50,
-    fragile: 2.50, insurance: 4.00, express: 5.00
-  };
-  var TOTAL_STEPS = 4;
+  var STORAGE_KEY = "ritiro.petra.v1";
+  var MAX_DAYS_AHEAD = 30;
 
   /* ------------------------------------------------------------- Utilities */
-  var $  = function (sel, root) { return (root || document).querySelector(sel); };
-  var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
+  var $ = function (sel) { return document.querySelector(sel); };
 
   function esc(value) {
     return String(value == null ? "" : value)
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }
-  function money(n) { return n.toFixed(2).replace(".", ",") + " €"; }
   function pad(n) { return n < 10 ? "0" + n : String(n); }
   function toISO(date) { return date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate()); }
   function addDays(date, days) {
@@ -491,473 +262,189 @@
     d.setHours(0, 0, 0, 0);
     return d;
   }
-  function formatDate(iso) {
+  function dayLabel(iso) {
     var d = parseISO(iso);
     if (!d) { return "—"; }
-    return d.toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+    var diff = Math.round((d.getTime() - today().getTime()) / 86400000);
+    if (diff === 0) { return "oggi"; }
+    if (diff === 1) { return "domani"; }
+    if (diff === 2) { return "dopodomani"; }
+    return d.toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" });
   }
-  function slotLabel(id) {
-    for (var i = 0; i < SLOTS.length; i++) { if (SLOTS[i].id === id) { return SLOTS[i].label; } }
-    return id || "—";
-  }
-  function readJSON(key, fallback) {
-    try {
-      var raw = window.localStorage.getItem(key);
-      if (!raw) { return fallback; }
-      var parsed = JSON.parse(raw);
-      return parsed == null ? fallback : parsed;
-    } catch (e) { return fallback; }
-  }
-  function writeJSON(key, value) {
-    try { window.localStorage.setItem(key, JSON.stringify(value)); return true; }
-    catch (e) { return false; }
+  function fullDate(iso) {
+    var d = parseISO(iso);
+    return d ? d.toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long", year: "numeric" }) : "—";
   }
   function newCode() {
     var alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    var out = "";
-    var bytes = new Uint8Array(6);
+    var bytes = new Uint8Array(4);
     if (window.crypto && window.crypto.getRandomValues) {
       window.crypto.getRandomValues(bytes);
     } else {
-      for (var k = 0; k < 6; k++) { bytes[k] = Math.floor(Math.random() * 256); }
+      for (var k = 0; k < 4; k++) { bytes[k] = Math.floor(Math.random() * 256); }
     }
-    for (var i = 0; i < 6; i++) { out += alphabet.charAt(bytes[i] % alphabet.length); }
-    return "RIT-" + out;
+    var out = "";
+    for (var i = 0; i < 4; i++) { out += alphabet.charAt(bytes[i] % alphabet.length); }
+    return "PETRA-" + out;
   }
 
-  /* ------------------------------------------------------------- Dati/Store */
-  function loadBookings() {
-    var list = readJSON(STORAGE_KEY, []);
-    return Object.prototype.toString.call(list) === "[object Array]" ? list : [];
+  /* ---------------------------------------------------------------- Storage */
+  function loadBooking() {
+    try {
+      var raw = window.localStorage.getItem(STORAGE_KEY);
+      if (!raw) { return null; }
+      var b = JSON.parse(raw);
+      return b && typeof b.place === "string" && typeof b.date === "string" ? b : null;
+    } catch (e) { return null; }
   }
-  function saveBookings(list) { writeJSON(STORAGE_KEY, list); }
-
-  function slotUsage(iso) {
-    var used = {};
-    SLOTS.forEach(function (s) { used[s.id] = 0; });
-    loadBookings().forEach(function (b) {
-      if (b.status === "active" && b.pickupDate === iso && used[b.slot] !== undefined) {
-        used[b.slot] += 1;
-      }
-    });
-    return used;
+  function saveBooking(booking) {
+    try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(booking)); } catch (e) {}
+  }
+  function removeBooking() {
+    try { window.localStorage.removeItem(STORAGE_KEY); } catch (e) {}
   }
 
   /* ----------------------------------------------------------------- Stato */
-  var state = { step: 1, slot: "", lastBooking: null };
-  var form = $("#booking-form");
-
-  var TEXT_FIELDS = [
-    "senderName", "senderPhone", "senderEmail", "pickupStreet", "pickupZip", "pickupCity",
-    "pickupProvince", "pickupNotes", "parcelType", "parcelCount", "parcelWeight",
-    "dimL", "dimW", "dimH", "recipientName", "recipientCity", "recipientZip", "pickupDate"
-  ];
-  var CHECK_FIELDS = ["fragile", "insurance"];
+  var booking = null;
 
   function collect() {
-    var data = {};
-    TEXT_FIELDS.forEach(function (id) {
-      var el = document.getElementById(id);
-      data[id] = el ? String(el.value).trim() : "";
-    });
-    CHECK_FIELDS.forEach(function (id) {
-      var el = document.getElementById(id);
-      data[id] = !!(el && el.checked);
-    });
-    var service = $('input[name="service"]:checked');
-    data.service = service ? service.value : "standard";
-    data.slot = state.slot;
-    return data;
+    return {
+      place: $("#place").value.trim(),
+      date: $("#date").value,
+      time: $("#time").value,
+      notes: $("#notes").value.trim()
+    };
   }
-
-  function applyDraft(draft) {
-    if (!draft) { return; }
-    TEXT_FIELDS.forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el && typeof draft[id] === "string") { el.value = draft[id]; }
-    });
-    CHECK_FIELDS.forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el) { el.checked = !!draft[id]; }
-    });
-    if (draft.service) {
-      var radio = $('input[name="service"][value="' + (draft.service === "express" ? "express" : "standard") + '"]');
-      if (radio) { radio.checked = true; }
-    }
-    state.slot = typeof draft.slot === "string" ? draft.slot : "";
-  }
-  function saveDraft() { writeJSON(DRAFT_KEY, collect()); }
-  function clearDraft() { try { window.localStorage.removeItem(DRAFT_KEY); } catch (e) {} }
 
   /* ------------------------------------------------------------ Validazione */
-  var RE = {
-    email: /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/,
-    phone: /^[+]?[0-9\s().-]{6,20}$/,
-    zip: /^\d{5}$/,
-    province: /^[A-Za-z]{2}$/
-  };
-
   function setError(key, message) {
-    var box = document.getElementById("err-" + key);
+    var box = $("#err-" + key);
     if (box) { box.textContent = message || ""; }
-    var input = document.getElementById(key);
+    var input = $("#" + key);
     if (input) {
       if (message) { input.setAttribute("aria-invalid", "true"); }
       else { input.removeAttribute("aria-invalid"); }
     }
-  }
-  function clearErrors(step) {
-    var scope = step ? $('.step[data-step="' + step + '"]') : document;
-    $$(".error", scope).forEach(function (p) { p.textContent = ""; });
-    $$("[aria-invalid]", scope).forEach(function (el) { el.removeAttribute("aria-invalid"); });
-    banner("");
   }
   function banner(message) {
     var el = $("#form-banner");
     el.textContent = message || "";
     el.hidden = !message;
   }
-  function num(value) {
-    if (value === "" || value == null) { return NaN; }
-    return Number(String(value).replace(",", "."));
+  function clearErrors() {
+    ["place", "date", "time"].forEach(function (key) { setError(key, ""); });
+    banner("");
   }
 
-  function validateStep(step) {
-    var d = collect();
+  function validate(d) {
     var errors = [];
-    function fail(key, message) { errors.push({ key: key, message: message }); }
+    if (d.place.length < 3) { errors.push({ key: "place", message: "Scrivi dove devo passare a prenderla." }); }
 
-    if (step === 1) {
-      if (d.senderName.length < 2) { fail("senderName", "Inserisci nome e cognome."); }
-      if (!RE.phone.test(d.senderPhone)) { fail("senderPhone", "Inserisci un numero di telefono valido."); }
-      if (!RE.email.test(d.senderEmail)) { fail("senderEmail", "Inserisci un indirizzo email valido."); }
-      if (d.pickupStreet.length < 3) { fail("pickupStreet", "Inserisci via e numero civico."); }
-      if (!RE.zip.test(d.pickupZip)) { fail("pickupZip", "Il CAP deve avere 5 cifre."); }
-      if (d.pickupCity.length < 2) { fail("pickupCity", "Inserisci la città."); }
-      if (!RE.province.test(d.pickupProvince)) { fail("pickupProvince", "Sigla di 2 lettere (es. MI)."); }
+    var day = parseISO(d.date);
+    if (!day) {
+      errors.push({ key: "date", message: "Scegli il giorno." });
+    } else if (day.getTime() < today().getTime()) {
+      errors.push({ key: "date", message: "Il giorno è già passato." });
+    } else if (day.getTime() > addDays(today(), MAX_DAYS_AHEAD).getTime()) {
+      errors.push({ key: "date", message: "Puoi prenotare al massimo tra " + MAX_DAYS_AHEAD + " giorni." });
     }
 
-    if (step === 2) {
-      if (!d.parcelType) { fail("parcelType", "Scegli il tipo di contenuto."); }
-      var colli = num(d.parcelCount);
-      if (!(colli >= 1 && colli <= 10) || colli !== Math.floor(colli)) {
-        fail("parcelCount", "Indica da 1 a 10 colli.");
-      }
-      var kg = num(d.parcelWeight);
-      if (!(kg >= 0.1 && kg <= 50)) { fail("parcelWeight", "Il peso deve essere tra 0,1 e 50 kg."); }
-      var dims = [num(d.dimL), num(d.dimW), num(d.dimH)];
-      var dimsOk = dims.every(function (v) { return v >= 1 && v <= 200; });
-      if (!dimsOk) { fail("dims", "Inserisci le tre misure, da 1 a 200 cm."); }
-      if (d.recipientName.length < 2) { fail("recipientName", "Inserisci il nome del destinatario."); }
-      if (d.recipientCity.length < 2) { fail("recipientCity", "Inserisci la città di consegna."); }
-      if (!RE.zip.test(d.recipientZip)) { fail("recipientZip", "Il CAP deve avere 5 cifre."); }
-    }
+    if (!/^\d{2}:\d{2}$/.test(d.time)) { errors.push({ key: "time", message: "Scegli l'ora." }); }
 
-    if (step === 3) {
-      var date = parseISO(d.pickupDate);
-      if (!date) {
-        fail("pickupDate", "Scegli la data del ritiro.");
-      } else if (date.getTime() < addDays(today(), 1).getTime()) {
-        fail("pickupDate", "Il ritiro va prenotato a partire da domani.");
-      } else if (date.getTime() > addDays(today(), 30).getTime()) {
-        fail("pickupDate", "Puoi prenotare al massimo con 30 giorni di anticipo.");
-      } else if (date.getDay() === 0) {
-        fail("pickupDate", "La domenica non effettuiamo ritiri.");
-      } else if (!d.slot) {
-        fail("slot", "Scegli una fascia oraria.");
-      } else {
-        var used = slotUsage(d.pickupDate);
-        if ((used[d.slot] || 0) >= SLOT_CAPACITY) {
-          fail("slot", "Questa fascia è al completo: scegline un'altra.");
-        }
-      }
-    }
-
-    if (step === 4) {
-      var terms = $("#terms");
-      if (!terms.checked) { fail("terms", "Devi accettare le condizioni per procedere."); }
-    }
-
-    clearErrors(step);
+    clearErrors();
     errors.forEach(function (e) { setError(e.key, e.message); });
     if (errors.length) {
       banner(errors.length === 1 ? "C'è un campo da correggere." : "Ci sono " + errors.length + " campi da correggere.");
-      var first = document.getElementById(errors[0].key);
-      if (first && typeof first.focus === "function") { first.focus(); }
-      else { $("#form-banner").scrollIntoView({ block: "nearest" }); }
+      var first = $("#" + errors[0].key);
+      if (first) { first.focus(); }
     }
     return errors.length === 0;
   }
 
-  /* ---------------------------------------------------------------- Prezzo */
-  function priceOf(d) {
-    var lines = [];
-    var kg = num(d.parcelWeight) || 0;
-    var colli = num(d.parcelCount) || 1;
-
-    lines.push({ label: "Ritiro a domicilio (primo collo, fino a 1 kg)", amount: PRICE.base });
-    var extraKg = Math.max(0, Math.ceil(kg - 1));
-    if (extraKg > 0) {
-      lines.push({ label: "Peso aggiuntivo (" + extraKg + " kg × " + money(PRICE.perExtraKg) + ")", amount: extraKg * PRICE.perExtraKg });
-    }
-    if (colli > 1) {
-      lines.push({ label: "Colli aggiuntivi (" + (colli - 1) + " × " + money(PRICE.extraColloEach) + ")", amount: (colli - 1) * PRICE.extraColloEach });
-    }
-    if (d.fragile) { lines.push({ label: "Gestione fragile", amount: PRICE.fragile }); }
-    if (d.insurance) { lines.push({ label: "Assicurazione fino a 500 €", amount: PRICE.insurance }); }
-    if (d.service === "express") { lines.push({ label: "Servizio express", amount: PRICE.express }); }
-
-    var total = lines.reduce(function (sum, l) { return sum + l.amount; }, 0);
-    return { lines: lines, total: Math.round(total * 100) / 100 };
+  /* --------------------------------------------------------------- Render */
+  function showView(name) {
+    $("#view-form").hidden = name !== "form";
+    $("#view-done").hidden = name !== "done";
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  /* -------------------------------------------------------- Render: slot UI */
-  function renderSlots() {
-    var box = $("#slots");
-    var iso = $("#pickupDate").value;
-    var date = parseISO(iso);
-    var usable = !!date && date.getDay() !== 0 && date.getTime() >= addDays(today(), 1).getTime();
-    var used = usable ? slotUsage(iso) : {};
-
-    box.innerHTML = "";
-    SLOTS.forEach(function (slot) {
-      var taken = used[slot.id] || 0;
-      var left = SLOT_CAPACITY - taken;
-      var full = usable && left <= 0;
-      var btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "slot";
-      btn.dataset.slot = slot.id;
-      btn.disabled = !usable || full;
-      btn.setAttribute("aria-pressed", state.slot === slot.id ? "true" : "false");
-      var info = !usable ? "Scegli prima una data"
-        : full ? "Al completo"
-        : left + (left === 1 ? " posto disponibile" : " posti disponibili");
-      btn.innerHTML = '<span class="time">' + esc(slot.label) + '</span><span class="left">' + esc(info) + "</span>";
-      btn.addEventListener("click", function () {
-        state.slot = slot.id;
-        setError("slot", "");
-        renderSlots();
-        saveDraft();
-      });
-      box.appendChild(btn);
-    });
-
-    if (state.slot && (!usable || (used[state.slot] || 0) >= SLOT_CAPACITY)) {
-      state.slot = "";
-      renderSlots();
-    }
-  }
-
-  /* --------------------------------------------------- Render: riepilogo UI */
-  function summaryRows(d) {
-    var dims = [d.dimL, d.dimW, d.dimH].join(" × ") + " cm";
-    var extras = [];
-    if (d.fragile) { extras.push("fragile"); }
-    if (d.insurance) { extras.push("assicurato"); }
-    return [
-      { head: "Ritiro" },
-      { dt: "Data e ora", dd: formatDate(d.pickupDate) + " · " + slotLabel(d.slot) },
-      { dt: "Indirizzo", dd: d.pickupStreet + ", " + d.pickupZip + " " + d.pickupCity + " (" + d.pickupProvince.toUpperCase() + ")" },
-      { dt: "Contatto", dd: d.senderName + " · " + d.senderPhone + " · " + d.senderEmail },
-      { dt: "Note", dd: d.pickupNotes || "—" },
-      { head: "Pacco" },
-      { dt: "Contenuto", dd: d.parcelType + (extras.length ? " (" + extras.join(", ") + ")" : "") },
-      { dt: "Colli e peso", dd: d.parcelCount + (Number(d.parcelCount) === 1 ? " collo" : " colli") + " · " + String(d.parcelWeight).replace(".", ",") + " kg" },
-      { dt: "Dimensioni", dd: dims },
-      { head: "Consegna" },
-      { dt: "Destinatario", dd: d.recipientName + " · " + d.recipientCity + " " + d.recipientZip },
-      { dt: "Servizio", dd: d.service === "express" ? "Express (giorno lavorativo successivo)" : "Standard (2-3 giorni lavorativi)" }
+  function renderDone(b) {
+    $("#done-when").textContent = dayLabel(b.date) + " alle " + b.time;
+    $("#done-place").textContent = b.place;
+    $("#done-code").textContent = b.code;
+    var rows = [
+      { dt: "Pacco", dd: "Pacco Petra · 1 collo, fragile" },
+      { dt: "Dove", dd: b.place },
+      { dt: "Quando", dd: fullDate(b.date) + " alle " + b.time }
     ];
-  }
-
-  function renderSummaryInto(el, d) {
-    el.innerHTML = summaryRows(d).map(function (row) {
-      if (row.head) { return '<div class="row head">' + esc(row.head) + "</div>"; }
+    if (b.notes) { rows.push({ dt: "Note", dd: b.notes }); }
+    $("#done-summary").innerHTML = rows.map(function (row) {
       return '<div class="row"><dt>' + esc(row.dt) + "</dt><dd>" + esc(row.dd) + "</dd></div>";
     }).join("");
-  }
-
-  function renderReview() {
-    var d = collect();
-    renderSummaryInto($("#summary"), d);
-    var price = priceOf(d);
-    $("#total-amount").textContent = money(price.total);
-    $("#price-lines").innerHTML = price.lines.map(function (l) {
-      return "<li><span>" + esc(l.label) + "</span><span>" + esc(money(l.amount)) + "</span></li>";
-    }).join("");
-  }
-
-  /* ---------------------------------------------------------- Render: passi */
-  function showStep(step) {
-    state.step = step;
-    $$(".step", form).forEach(function (section) {
-      section.hidden = Number(section.dataset.step) !== step;
-    });
-    $$("#stepbar li").forEach(function (li) {
-      var n = Number(li.dataset.step);
-      li.dataset.state = n === step ? "current" : (n < step ? "done" : "todo");
-    });
-    $("#btn-back").hidden = step === 1;
-    $("#btn-next").hidden = step === TOTAL_STEPS;
-    $("#btn-submit").hidden = step !== TOTAL_STEPS;
-    banner("");
-    if (step === 3) { renderSlots(); }
-    if (step === 4) { renderReview(); }
-    var heading = $('.step[data-step="' + step + '"] h2');
-    if (heading) {
-      heading.setAttribute("tabindex", "-1");
-      heading.focus({ preventScroll: true });
-    }
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  /* -------------------------------------------------------- Render: elenco */
-  function bookingStatus(b) {
-    if (b.status === "cancelled") { return { label: "Annullato", cls: "cancelled" }; }
-    var d = parseISO(b.pickupDate);
-    if (d && d.getTime() < today().getTime()) { return { label: "Completato", cls: "past" }; }
-    return { label: "Confermato", cls: "" };
-  }
-
-  function renderBookings() {
-    var list = loadBookings().slice().sort(function (a, b) {
-      return (a.pickupDate + a.slot) < (b.pickupDate + b.slot) ? -1 : 1;
-    });
-    var box = $("#bookings");
-    var active = list.filter(function (b) { return b.status === "active"; }).length;
-    $("#tab-count").textContent = active ? "(" + active + ")" : "";
-
-    if (!list.length) {
-      box.innerHTML = '<p class="empty">Non hai ancora prenotato nessun ritiro.</p>';
-      return;
-    }
-
-    box.innerHTML = list.map(function (b) {
-      var st = bookingStatus(b);
-      var cancellable = b.status === "active" && parseISO(b.pickupDate) &&
-        parseISO(b.pickupDate).getTime() >= addDays(today(), 1).getTime();
-      return '<article class="booking">' +
-        '<div class="info">' +
-          "<strong>" + esc(formatDate(b.pickupDate)) + "</strong><br>" +
-          '<span class="meta">' + esc(slotLabel(b.slot)) + " · " + esc(b.pickupStreet) + ", " +
-            esc(b.pickupZip) + " " + esc(b.pickupCity) + "</span><br>" +
-          '<span class="meta">Codice ' + esc(b.code) + " · " + esc(b.parcelCount) +
-            (Number(b.parcelCount) === 1 ? " collo" : " colli") + " · " + esc(money(b.price)) + "</span>" +
-        "</div>" +
-        '<span class="badge ' + st.cls + '">' + esc(st.label) + "</span>" +
-        (cancellable
-          ? '<button type="button" class="link danger-link" data-cancel="' + esc(b.code) + '">Annulla</button>'
-          : "") +
-        "</article>";
-    }).join("");
-
-    $$("[data-cancel]", box).forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var code = btn.getAttribute("data-cancel");
-        if (!window.confirm("Vuoi annullare la prenotazione " + code + "?")) { return; }
-        var all = loadBookings().map(function (b) {
-          return b.code === code ? Object.assign({}, b, { status: "cancelled" }) : b;
-        });
-        saveBookings(all);
-        renderBookings();
-        renderSlots();
-      });
-    });
-  }
-
-  /* ----------------------------------------------------------- Navigazione */
-  function showView(name) {
-    $("#view-new").hidden = name !== "new";
-    $("#view-done").hidden = name !== "done";
-    $("#view-list").hidden = name !== "list";
-    $("#tab-new").setAttribute("aria-current", name === "list" ? "false" : "page");
-    $("#tab-list").setAttribute("aria-current", name === "list" ? "page" : "false");
-    if (name === "list") { renderBookings(); }
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  function resetForm() {
-    form.reset();
-    state.slot = "";
-    clearErrors();
-    clearDraft();
-    initDateBounds();
-    showStep(1);
-  }
-
-  /* -------------------------------------------------------------- Conferma */
-  function submitBooking() {
-    for (var step = 1; step <= TOTAL_STEPS; step++) {
-      if (!validateStep(step)) {
-        if (state.step !== step) { showStep(step); validateStep(step); }
-        return;
-      }
-    }
-    var d = collect();
-    var booking = Object.assign({}, d, {
-      code: newCode(),
-      price: priceOf(d).total,
-      status: "active",
-      createdAt: new Date().toISOString()
-    });
-    var all = loadBookings();
-    all.push(booking);
-    saveBookings(all);
-    state.lastBooking = booking;
-
-    $("#done-code").textContent = booking.code;
-    renderSummaryInto($("#done-summary"), booking);
-    clearDraft();
-    renderBookings();
     showView("done");
+  }
+
+  function openForm(existing) {
+    $("#form-title").textContent = existing ? "Modifica il ritiro" : "Prenota il ritiro";
+    $("#form-lead").textContent = existing
+      ? "Cambia dove o quando devo passare a prendere Petra."
+      : "Dimmi dove e quando devo passare a prendere Petra.";
+    $("#btn-submit").textContent = existing ? "Salva le modifiche" : "Conferma il ritiro";
+    $("#btn-cancel-edit").hidden = !existing;
+
+    $("#place").value = existing ? existing.place : "";
+    $("#date").value = existing ? existing.date : "";
+    $("#time").value = existing ? existing.time : "";
+    $("#notes").value = existing && existing.notes ? existing.notes : "";
+
+    clearErrors();
+    showView("form");
+    $("#place").focus({ preventScroll: true });
   }
 
   /* ------------------------------------------------------------------ Init */
   function initDateBounds() {
-    var input = $("#pickupDate");
-    input.min = toISO(addDays(today(), 1));
-    input.max = toISO(addDays(today(), 30));
+    var input = $("#date");
+    input.min = toISO(today());
+    input.max = toISO(addDays(today(), MAX_DAYS_AHEAD));
   }
 
   function bind() {
-    $("#btn-next").addEventListener("click", function () {
-      if (validateStep(state.step)) { showStep(Math.min(state.step + 1, TOTAL_STEPS)); }
-    });
-    $("#btn-back").addEventListener("click", function () {
-      showStep(Math.max(state.step - 1, 1));
-    });
-    form.addEventListener("submit", function (event) {
+    $("#booking-form").addEventListener("submit", function (event) {
       event.preventDefault();
-      submitBooking();
+      var d = collect();
+      if (!validate(d)) { return; }
+      booking = {
+        place: d.place, date: d.date, time: d.time, notes: d.notes,
+        code: booking && booking.code ? booking.code : newCode()
+      };
+      saveBooking(booking);
+      renderDone(booking);
     });
-    $("#pickupDate").addEventListener("change", function () {
-      state.slot = "";
-      setError("pickupDate", "");
-      renderSlots();
-      saveDraft();
-    });
-    form.addEventListener("input", function (event) {
-      var id = event.target.id;
-      if (id) { setError(id, ""); }
-      if (id === "dimL" || id === "dimW" || id === "dimH") { setError("dims", ""); }
-      saveDraft();
-    });
-    form.addEventListener("change", function () { saveDraft(); });
 
-    $("#tab-new").addEventListener("click", function () { showView("new"); });
-    $("#tab-list").addEventListener("click", function () { showView("list"); });
-    $("#btn-goto-list").addEventListener("click", function () { showView("list"); });
-    $("#btn-new-from-list").addEventListener("click", function () { resetForm(); showView("new"); });
-    $("#btn-another").addEventListener("click", function () { resetForm(); showView("new"); });
+    $("#booking-form").addEventListener("input", function (event) {
+      if (event.target.id) { setError(event.target.id, ""); }
+      banner("");
+    });
+
+    $("#btn-cancel-edit").addEventListener("click", function () {
+      if (booking) { renderDone(booking); }
+    });
+
+    $("#btn-edit").addEventListener("click", function () { openForm(booking); });
+
+    $("#btn-delete").addEventListener("click", function () {
+      if (!window.confirm("Vuoi annullare il ritiro di Pacco Petra?")) { return; }
+      removeBooking();
+      booking = null;
+      openForm(null);
+    });
   }
 
   initDateBounds();
-  applyDraft(readJSON(DRAFT_KEY, null));
   bind();
-  showStep(1);
-  renderBookings();
-  showView("new");
+  booking = loadBooking();
+  if (booking) { renderDone(booking); } else { openForm(null); }
 })();
 </script>
 </body>
